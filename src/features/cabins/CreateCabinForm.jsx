@@ -1,4 +1,7 @@
+/* eslint-disable react/prop-types */
 import styled from "styled-components";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 import Input from "../../ui/Input";
 import Form from "../../ui/Form";
@@ -6,9 +9,7 @@ import Button from "../../ui/Button";
 import FileInput from "../../ui/FileInput";
 import Textarea from "../../ui/Textarea";
 import { useForm } from "react-hook-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addCabin } from "../../services/apiCabins";
-import toast from "react-hot-toast";
 import Spinner from "../../ui/Spinner";
 
 const FormRow = styled.div`
@@ -47,17 +48,25 @@ const Error = styled.span`
   color: var(--color-red-700);
 `;
 
-function CreateCabinForm() {
+function CreateCabinForm({ editCabin }) {
+  const { id: editId, ...editData } = editCabin || {};
+
+  // converting the Id into a boolean if updating the cabin is TRUE
+  const editBoolean = Boolean(editId);
+
   const {
     register,
     handleSubmit,
     reset,
     getValues,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: editBoolean ? editData : {},
+  });
   const queryClient = useQueryClient();
 
-  const { isLoading, mutate } = useMutation({
+  // CREATING A CABIN
+  const { isLoading: isCreating, mutate: createMutate } = useMutation({
     mutationFn: (newCabinData) => addCabin(newCabinData),
     onSuccess: () => {
       toast.success("New Cabin Created");
@@ -67,11 +76,35 @@ function CreateCabinForm() {
     onError: (err) => toast.error(err.message),
   });
 
+  //UPDATING A CABIN
+  const { isLoading: isEditing, mutate: editMutate } = useMutation({
+    mutationFn: ({ newCabinData, id }) => addCabin(newCabinData, id),
+    onSuccess: () => {
+      toast.success("Cabin Updated");
+      queryClient.invalidateQueries({ queryKey: ["cabin"] });
+      reset();
+    },
+    onError: (err) => toast.error(err.message),
+  });
+
+  //SUBMITING DATA FROM THE REACT FORM HOOK AND IN PUTTING IT IN THE MUTATION FUNCTION FROM REACT-QUERY
+
+  const isWorking = isCreating || isEditing;
+
   function onSubmit(data) {
-    mutate(data);
+    // console.log(data);
+    // plugin the current data and update the image file input.
+
+    const image = typeof data.image === "string" ? data.image : data.image[0];
+
+    if (editBoolean) {
+      editMutate({ newCabinData: { ...data, image }, id: editId });
+    } else {
+      createMutate({ ...data, image: image });
+    }
   }
 
-  if (isLoading) return <Spinner />;
+  if (isWorking) return <Spinner />;
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
@@ -146,7 +179,13 @@ function CreateCabinForm() {
 
       <FormRow>
         <Label htmlFor="image">Cabin photo</Label>
-        <FileInput id="image" accept="image/*" />
+        <FileInput
+          id="image"
+          accept="image/*"
+          {...register("image", {
+            required: editBoolean ? false : "Require",
+          })}
+        />
       </FormRow>
 
       <FormRow>
@@ -154,7 +193,9 @@ function CreateCabinForm() {
         <Button variation="secondary" type="reset">
           Cancel
         </Button>
-        <Button disabled={isLoading}>Add cabin</Button>
+        <Button disabled={isWorking}>
+          {editBoolean ? "Update Cabin" : "Add Cabin"}
+        </Button>
       </FormRow>
     </Form>
   );
