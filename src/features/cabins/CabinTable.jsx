@@ -29,6 +29,7 @@ const TableHeader = styled.header`
 `;
 
 function CabinTable() {
+  //THIS CAN BE A CUSTOM HOOK AS WELL BUT ITS SMALL AND I LEFT IS FOR REFERENCE FOR ANYONE WHO IS LOOKING AT Y CODE.
   const {
     isLoading,
     data: cabinData,
