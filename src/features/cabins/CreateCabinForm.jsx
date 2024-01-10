@@ -1,16 +1,14 @@
 /* eslint-disable react/prop-types */
 import styled from "styled-components";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
-
 import Input from "../../ui/Input";
 import Form from "../../ui/Form";
 import Button from "../../ui/Button";
 import FileInput from "../../ui/FileInput";
 import Textarea from "../../ui/Textarea";
 import { useForm } from "react-hook-form";
-import { addCabin } from "../../services/apiCabins";
 import Spinner from "../../ui/Spinner";
+import useCreateandUpdateCabinMutate from "./useCreateandUpdateCabinMutate";
+import useUpdateCabinMutate from "./useUpdateCabinMutate";
 
 const FormRow = styled.div`
   display: grid;
@@ -63,31 +61,15 @@ function CreateCabinForm({ editCabin }) {
   } = useForm({
     defaultValues: editBoolean ? editData : {},
   });
-  const queryClient = useQueryClient();
-
-  // CREATING A CABIN
-  const { isLoading: isCreating, mutate: createMutate } = useMutation({
-    mutationFn: (newCabinData) => addCabin(newCabinData),
-    onSuccess: () => {
-      toast.success("New Cabin Created");
-      queryClient.invalidateQueries({ queryKey: ["cabin"] });
-      reset();
-    },
-    onError: (err) => toast.error(err.message),
-  });
-
-  //UPDATING A CABIN
-  const { isLoading: isEditing, mutate: editMutate } = useMutation({
-    mutationFn: ({ newCabinData, id }) => addCabin(newCabinData, id),
-    onSuccess: () => {
-      toast.success("Cabin Updated");
-      queryClient.invalidateQueries({ queryKey: ["cabin"] });
-      reset();
-    },
-    onError: (err) => toast.error(err.message),
-  });
 
   //SUBMITING DATA FROM THE REACT FORM HOOK AND IN PUTTING IT IN THE MUTATION FUNCTION FROM REACT-QUERY
+
+  // CREATING A CABIN
+  const { isLoading: isCreating, mutate: createMutate } =
+    useCreateandUpdateCabinMutate();
+
+  //UPDATING A CABIN
+  const { isEditing, editMutate } = useUpdateCabinMutate();
 
   const isWorking = isCreating || isEditing;
 
@@ -98,9 +80,19 @@ function CreateCabinForm({ editCabin }) {
     const image = typeof data.image === "string" ? data.image : data.image[0];
 
     if (editBoolean) {
-      editMutate({ newCabinData: { ...data, image }, id: editId });
+      editMutate(
+        { newCabinData: { ...data, image }, id: editId },
+        {
+          onSuccess: () => reset(),
+        }
+      );
     } else {
-      createMutate({ ...data, image: image });
+      createMutate(
+        { ...data, image: image },
+        {
+          onSuccess: () => reset(),
+        }
+      );
     }
   }
 

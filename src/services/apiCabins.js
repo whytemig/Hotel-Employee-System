@@ -53,6 +53,9 @@ export async function addCabin(newCabinData, id) {
     console.log(error);
     throw new Error("Something went wrong with inserting a Cabin");
   }
+
+  if (hasimagePath) return data;
+
   const avatarFile = newCabinData.image;
   const { error: uploadError } = await supabase.storage
     .from("cabin-images")
