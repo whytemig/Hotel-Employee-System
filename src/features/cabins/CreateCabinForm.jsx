@@ -46,7 +46,7 @@ const Error = styled.span`
   color: var(--color-red-700);
 `;
 
-function CreateCabinForm({ editCabin }) {
+function CreateCabinForm({ editCabin, onClose }) {
   const { id: editId, ...editData } = editCabin || {};
 
   // converting the Id into a boolean if updating the cabin is TRUE
@@ -83,14 +83,18 @@ function CreateCabinForm({ editCabin }) {
       editMutate(
         { newCabinData: { ...data, image }, id: editId },
         {
-          onSuccess: () => reset(),
+          onSuccess: () => {
+            reset(), onClose?.();
+          },
         }
       );
     } else {
       createMutate(
         { ...data, image: image },
         {
-          onSuccess: () => reset(),
+          onSuccess: () => {
+            reset(), onClose?.();
+          },
         }
       );
     }
@@ -99,7 +103,10 @@ function CreateCabinForm({ editCabin }) {
   if (isWorking) return <Spinner />;
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
+    <Form
+      onSubmit={handleSubmit(onSubmit)}
+      type={onClose ? "modal" : "regular"}
+    >
       <FormRow>
         <Label htmlFor="name">Cabin name</Label>
         <Input
@@ -182,7 +189,7 @@ function CreateCabinForm({ editCabin }) {
 
       <FormRow>
         {/* type is an HTML attribute! */}
-        <Button variation="secondary" type="reset">
+        <Button variation="secondary" type="reset" onClick={() => onClose?.()}>
           Cancel
         </Button>
         <Button disabled={isWorking}>
