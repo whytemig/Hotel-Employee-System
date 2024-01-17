@@ -5,6 +5,7 @@ import Spinner from "../../ui/Spinner";
 import CabinRow from "./CabinRow";
 import AnotherTable from "../../ui/Table";
 import Menus from "../../ui/Menus";
+import { useSearchParams } from "react-router-dom";
 
 // const Table = styled.div`
 //   border: 1px solid var(--color-grey-200);
@@ -41,8 +42,38 @@ function CabinTable() {
     queryFn: getCabins,
   });
 
+  const [searchP] = useSearchParams();
+
   if (isLoading) return <Spinner />;
 
+  //FILTER*************************************************
+
+  const filterValue = searchP.get("discount") || "all";
+
+  let filteredCabin = cabinData;
+
+  if (filterValue === "all") filteredCabin = cabinData;
+
+  if (filterValue === "no-discount") {
+    filteredCabin = cabinData.filter((cabin) => cabin.discount === 0);
+  }
+  if (filterValue === "discount") {
+    filteredCabin = cabinData.filter((cabin) => cabin.discount > 0);
+  }
+  // ******************************************************************
+
+  // SORT*************************************************************
+  const SortValue = searchP.get("sort") || "created_at-asc";
+  const [field, direction] = SortValue.split("-");
+
+  const modifier = direction === "asc" ? 1 : -1;
+  const sortedCabins = filteredCabin.sort(
+    (a, b) => (a[field] - b[field]) * modifier
+  );
+
+  console.log(sortedCabins);
+
+  // ********************************************************************
   if (error) {
     console.log(error.message);
   }
@@ -59,7 +90,8 @@ function CabinTable() {
           <div></div>
         </AnotherTable.Header>
         <AnotherTable.Body
-          data={cabinData}
+          // data={cabinData}
+          data={sortedCabins}
           render={(cabin) => <CabinRow key={cabin.id} cabin={cabin} />}
         />
       </AnotherTable>
