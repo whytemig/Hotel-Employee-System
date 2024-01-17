@@ -153,7 +153,6 @@ function CreateCabinForm({ editCabin, onClose }) {
           id="discount"
           defaultValue={0}
           {...register("discount", {
-            required: "REquired",
             validate: (value) =>
               value <= getValues().regularPrice ||
               "Discount should not be greater",
