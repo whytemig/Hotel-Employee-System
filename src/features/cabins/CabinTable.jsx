@@ -6,6 +6,7 @@ import CabinRow from "./CabinRow";
 import AnotherTable from "../../ui/Table";
 import Menus from "../../ui/Menus";
 import { useSearchParams } from "react-router-dom";
+import Empty from "../../ui/Empty";
 
 // const Table = styled.div`
 //   border: 1px solid var(--color-grey-200);
@@ -41,11 +42,12 @@ function CabinTable() {
     queryKey: ["cabin"],
     queryFn: getCabins,
   });
-
   const [searchP] = useSearchParams();
 
+  if (!cabinData?.length) return <Empty resource="cabins" />;
   if (isLoading) return <Spinner />;
 
+  console.log(cabinData);
   //FILTER*************************************************
 
   const filterValue = searchP.get("discount") || "all";
@@ -74,6 +76,7 @@ function CabinTable() {
   console.log(sortedCabins);
 
   // ********************************************************************
+
   if (error) {
     console.log(error.message);
   }
