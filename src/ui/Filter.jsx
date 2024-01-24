@@ -45,6 +45,7 @@ function Filter({ filterField, options }) {
 
   function handleFilter(value) {
     searchP.set(filterField, value);
+    if (searchP.get("page")) searchP.set("page", 1);
     setSearchP(searchP);
   }
 
