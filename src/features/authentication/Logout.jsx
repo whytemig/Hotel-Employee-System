@@ -8,7 +8,6 @@ function Logout() {
   return (
     <ButtonIcon disabled={isLoading} onClick={logoutMutate}>
       {!isLoading ? <HiArrowRightOnRectangle /> : <SpinnerMini />}
-      Log Out
     </ButtonIcon>
   );
 }
