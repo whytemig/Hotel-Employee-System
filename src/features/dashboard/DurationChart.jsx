@@ -1,4 +1,14 @@
+/* eslint-disable react/prop-types */
 import styled from "styled-components";
+import Heading from "../../ui/Heading";
+import {
+  Cell,
+  Legend,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+} from "recharts";
 
 const ChartBox = styled.div`
   /* Box */
@@ -18,94 +28,94 @@ const ChartBox = styled.div`
   }
 `;
 
-const startDataLight = [
-  {
-    duration: "1 night",
-    value: 0,
-    color: "#ef4444",
-  },
-  {
-    duration: "2 nights",
-    value: 0,
-    color: "#f97316",
-  },
-  {
-    duration: "3 nights",
-    value: 0,
-    color: "#eab308",
-  },
-  {
-    duration: "4-5 nights",
-    value: 0,
-    color: "#84cc16",
-  },
-  {
-    duration: "6-7 nights",
-    value: 0,
-    color: "#22c55e",
-  },
-  {
-    duration: "8-14 nights",
-    value: 0,
-    color: "#14b8a6",
-  },
-  {
-    duration: "15-21 nights",
-    value: 0,
-    color: "#3b82f6",
-  },
-  {
-    duration: "21+ nights",
-    value: 0,
-    color: "#a855f7",
-  },
-];
+// const startDataLight = [
+//   {
+//     duration: "1 night",
+//     value: 0,
+//     color: "#ef4444",
+//   },
+//   {
+//     duration: "2 nights",
+//     value: 0,
+//     color: "#f97316",
+//   },
+//   {
+//     duration: "3 nights",
+//     value: 0,
+//     color: "#eab308",
+//   },
+//   {
+//     duration: "4-5 nights",
+//     value: 0,
+//     color: "#84cc16",
+//   },
+//   {
+//     duration: "6-7 nights",
+//     value: 0,
+//     color: "#22c55e",
+//   },
+//   {
+//     duration: "8-14 nights",
+//     value: 0,
+//     color: "#14b8a6",
+//   },
+//   {
+//     duration: "15-21 nights",
+//     value: 0,
+//     color: "#3b82f6",
+//   },
+//   {
+//     duration: "21+ nights",
+//     value: 0,
+//     color: "#a855f7",
+//   },
+// ];
 
 const startDataDark = [
   {
     duration: "1 night",
-    value: 0,
+    value: 2,
     color: "#b91c1c",
   },
   {
     duration: "2 nights",
-    value: 0,
+    value: 5,
     color: "#c2410c",
   },
   {
     duration: "3 nights",
-    value: 0,
+    value: 4,
     color: "#a16207",
   },
   {
     duration: "4-5 nights",
-    value: 0,
+    value: 6,
     color: "#4d7c0f",
   },
   {
     duration: "6-7 nights",
-    value: 0,
+    value: 7,
     color: "#15803d",
   },
   {
     duration: "8-14 nights",
-    value: 0,
+    value: 2,
     color: "#0f766e",
   },
   {
     duration: "15-21 nights",
-    value: 0,
+    value: 2,
     color: "#1d4ed8",
   },
   {
     duration: "21+ nights",
-    value: 0,
+    value: 5,
     color: "#7e22ce",
   },
 ];
 
 function prepareData(startData, stays) {
-  // A bit ugly code, but sometimes this is what it takes when working with real data 😅
+  // A bit ugly code, but sometimes this is what it takes when working with real data
 
   function incArrayValue(arr, field) {
     return arr.map((obj) =>
@@ -130,3 +140,41 @@ function prepareData(startData, stays) {
 
   return data;
 }
+
+function DurationChart({ confirmStays }) {
+  console.log(confirmStays);
+  return (
+    <ChartBox>
+      <Heading as="h2">Stay Duration</Heading>
+      <ResponsiveContainer width="100%" height={240}>
+        <PieChart>
+          <Pie
+            data={startDataDark}
+            nameKey="duration"
+            dataKey="value"
+            innerRadius={85}
+            outerRadius={110}
+            cx="40%"
+            cy="50%"
+            paddingAngle={3}
+          >
+            {startDataDark?.map((entry, index) => (
+              <Cell fill={entry.color} stroke={entry.color} key={index} />
+            ))}
+          </Pie>
+          <Tooltip />
+          <Legend
+            verticalAlign="middle"
+            align="right"
+            width="30%"
+            layout="vertical"
+            iconSize={15}
+            iconType="circle"
+          />
+        </PieChart>
+      </ResponsiveContainer>
+    </ChartBox>
+  );
+}
+
+export default DurationChart;
