@@ -6,6 +6,7 @@ import Tag from "../../ui/Tag";
 import ButtonGroup from "../../ui/ButtonGroup";
 import Button from "../../ui/Button";
 import ButtonText from "../../ui/ButtonText";
+import Empty from "../../ui/Empty";
 
 import { useMoveBack } from "../../hooks/useMoveBack";
 import { useBooking } from "./useBooking";
@@ -32,6 +33,7 @@ function BookingDetail() {
   const { deleteBookingMutate } = useDeleteBooking();
 
   if (isLoading) return <Spinner />;
+  if (!bookingData) return <Empty resourceName="bookings" />;
 
   const { status, id: bookingId } = bookingData;
 
