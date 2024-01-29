@@ -110,7 +110,9 @@ function Toggle({ id }) {
 // eslint-disable-next-line react/prop-types
 function List({ id, children }) {
   const { openId, position, close } = useContext(MenuContext);
-  const ref = useOusideClick(close);
+  const ref = useOusideClick(() => {
+    close();
+  }, false);
 
   if (openId !== id) return null;
 
