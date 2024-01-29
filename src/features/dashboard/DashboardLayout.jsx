@@ -7,6 +7,7 @@ import { getCabins } from "../../services/apiCabins";
 import { useQuery } from "@tanstack/react-query";
 import SalesChart from "./SalesChart";
 import DurationChart from "./DurationChart";
+import TodayActivity from "../check-in-out/TodayActivity";
 
 const StyledDashboardLayout = styled.div`
   display: grid;
@@ -33,7 +34,7 @@ function DashboardLayout() {
         numDays={numDays}
         cabinCount={cabinData?.length}
       />
-      <div>Todays</div>
+      <TodayActivity />
       <DurationChart confirmStays={confirmStays} />
       <SalesChart bookings={bookings} numDays={numDays} />
     </StyledDashboardLayout>
