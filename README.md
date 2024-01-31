@@ -14,23 +14,18 @@ As someone who absolutely loves the idea of being punctual and organized, my cur
 
 
 ### HomePage
-<!-- IMAGE -->
+![HomePage](https://github.com/whytemig/Hotel-Employee-System/blob/main/public/oasis-homepage.png?raw=true)
 ### CRUD Feature Page
-<!-- IMAGE -->
+![CRUD PAGE](https://github.com/whytemig/Hotel-Employee-System/blob/main/public/oasis-add-rooms.png?raw=true)
 ### Profile Update Page
-<!-- Image -->
+![CRUD PAGE](https://github.com/whytemig/Hotel-Employee-System/blob/main/public/oasis-update-profile.png?raw=true)
 ## Images 
 
 
-### HomePage
-<!-- IMAGE -->
-### CRUD Feature Page
-<!-- IMAGE -->
-### Profile Update Page
-<!-- Image -->
+
 ## Link & Lessons
 
-<!-- link to project -->
+[Oasis Dashboard](https://w-oasis-hotel.netlify.app/dashboard)
 
 The application was deployed using netlify.
 [![My Skills](https://skillicons.dev/icons?i=netlify)](https://readipizza.netlify.app/) 
@@ -70,7 +65,10 @@ Start the server
 ```bash
   npm run dev
 ```
-
+### Login
+Email: `my@email.com`
+Password: `123456`
+`Once login enter the users page and create a new user to test out the project.`
 
 ## Authors
 
